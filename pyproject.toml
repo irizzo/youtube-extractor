@@ -1,17 +1,14 @@
 [project]
 name = "yt-extractor"
 version = "0.1.0"
-description = "Add your description here"
+description = "Searches YouTube via the Data API v3 and collects video metadata and top-level comments into cleaned JSONL datasets for text analysis"
 readme = "README.md"
 authors = [
     { name = "Isabelle Rizzo", email = "isabelle965rizzo@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
-
-[project.scripts]
-yt-extractor = "yt_extractor:main"
-
-[build-system]
-requires = ["uv_build>=0.12.21,<0.13.0"]
-build-backend = "uv_build"
+dependencies = [
+    "emoji>=2.16.0",
+    "google-api-python-client>=2.201.0",
+    "python-dotenv>=1.2.4",
+]
