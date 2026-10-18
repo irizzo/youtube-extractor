@@ -11,7 +11,10 @@ def get_pipeline_logger(logger_name="pipeline_logger", log_file="data/pipeline.l
     """
     logger = logging.getLogger(logger_name)
 
-    if logger.hasHandlers():
+    # Check this logger's own handlers only. hasHandlers() also counts the
+    # root logger's, so any logging.basicConfig() (a notebook, pytest) would
+    # make this return early and the log file would never be created.
+    if logger.handlers:
         return logger
 
     print("Logging into file ", log_file)

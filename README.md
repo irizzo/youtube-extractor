@@ -149,6 +149,16 @@ The YouTube Data API gives a project 10,000 units per day by default:
 
 The video stage is the expensive one: `results_per_search: 200` with a single query costs about 404 units, while collecting 100,000 comments costs around 1,000. When quota runs out the API returns `403 quotaExceeded` — the checkpoints let you pick the run back up the next day.
 
+## Tests
+
+From the root of the project:
+
+```bash
+uv run pytest
+```
+
+The suite needs **no API key and spends no quota**: the YouTube client is replaced by a fake, and every file is written to a temporary directory, never to `data/`. It covers the text cleaner, config defaults, quota-error classification, both retrieval steps (pagination, Shorts filtering, per-video caps), and checkpoint/resume behaviour of both stages.
+
 ## Project structure
 
 ```
@@ -164,4 +174,8 @@ src/
     ├── handle_config.py             # applies defaults, validates the API key, builds paths
     ├── helpers.py                   # JSONL streaming and text preprocessing
     └── logger.py                    # console + rotating file logger
+tests/
+├── fakes.py                         # fake YouTube client, HttpError builder
+├── conftest.py                      # fixtures: fake-client install, logger cleanup
+└── test_*.py                        # one file per module, plus test_isolation.py
 ```
