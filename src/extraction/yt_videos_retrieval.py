@@ -20,14 +20,18 @@ def youtube_video_search_gen(config, query):
             f"[{query}] Fetching batch... (Total fetched so far: {total_fetched})"
         )
 
-        request = get_youtube_client().search().list(
-            part="snippet",
-            q=query,
-            type="video",
-            maxResults=max_results,
-            publishedAfter=config.get("published_after"),
-            relevanceLanguage=config.get("language"),
-            pageToken=next_page_token,
+        request = (
+            get_youtube_client()
+            .search()
+            .list(
+                part="snippet",
+                q=query,
+                type="video",
+                maxResults=max_results,
+                publishedAfter=config.get("published_after"),
+                relevanceLanguage=config.get("language"),
+                pageToken=next_page_token,
+            )
         )
         response = execute_request(request, f"search.list for '{query}'")
         items = response.get("items", [])
@@ -76,15 +80,13 @@ def get_batched_video_details(video_ids):
         .videos()
         .list(part="snippet,contentDetails", id=",".join(video_ids))
     )
-    response = execute_request(
-        request, f"videos.list for {len(video_ids)} video(s)"
-    )
+    response = execute_request(request, f"videos.list for {len(video_ids)} video(s)")
 
     details = {}
     for item in response.get("items", []):
         details[item["id"]] = {
             "full_description": item["snippet"].get("description", ""),
-            "duration": item["contentDetails"]["duration"],
+            "duration": item.get("contentDetails", {}).get("duration", ""),
         }
     return details
 
