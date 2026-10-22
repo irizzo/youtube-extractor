@@ -34,6 +34,7 @@ def clean_youtube_string(text):
     if not text:
         return None
 
+    text = html.unescape(text)  # unescape html entities as &amp; &lt; &gt; etc
     text = re.sub(r"<[^>]+>", " ", text)  # remove html codes
     text = re.sub(
         r"(?:at\s+)?\[?\b\d{1,2}:\d{2}(?::\d{2})?[a-zA-Z]*\]?",
